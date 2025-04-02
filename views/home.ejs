@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('./partials/head') %>
+    <title>Homepage</title>
+</head>
+<body>
+    <%- include('./partials/nav') %>
+    <div class="container mt-4">
+        <!-- Loop through each category -->
+        <% Object.keys(blogsByCategory).forEach(category => { %>
+            <div class="card mb-4">
+                <!-- Category Header with Dynamic Color -->
+                <div class="card-header text-white" style="background-color: <%= categoryColors[category] %>;">
+                    <h3 class="card-title mb-0"><%= category %></h3>
+                </div>
+                <div class="card-body">
+                    <div class="row row-cols-1 row-cols-md-3 g-4">
+                        <!-- Loop through blogs in this category -->
+                        <% blogsByCategory[category].forEach(blog => { %>
+                            <div class="col">
+                                <div class="card h-100">
+                                    <!-- Blog Cover Image -->
+                                    <img src="<%= blog.coverImageURL %>" class="card-img-top" alt="<%= blog.title %>">
+
+                                    <!-- Blog Content -->
+                                    <div class="card-body">
+                                        <!-- Blog Title -->
+                                        <h5 class="card-title"><%= blog.title %></h5>
+
+                                        <!-- Blog Body Excerpt -->
+                                        <p class="card-text"><%= blog.body.substring(0, 100) %>...</p>
+
+                                        <!-- Blog Category with Dynamic Color -->
+                                        <p class="text-muted">Category: 
+                                            <span class="badge" style="background-color: <%= categoryColors[blog.category] %>;">
+                                                <%= blog.category %>
+                                            </span>
+                                        </p>
+
+                                        <!-- Read More Button -->
+                                        <a href="/blog/<%= blog._id %>" class="btn btn-primary">Read More</a>
+                                    </div>
+                                </div>
+                            </div>
+                        <% }) %>
+                    </div>
+                </div>
+            </div>
+        <% }) %>
+    </div>
+    <%- include('./partials/footer') %>
+   
+</body>
+</html>

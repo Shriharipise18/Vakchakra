@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('./partials/head') %>
+    <title>Edit Blog</title>
+    <!-- TinyMCE Script -->
+    <script src="https://cdn.tiny.cloud/1/34zhin37w93jjpzlgtn8cmwutl1pdyig1c8anvddr4qs8kvm/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+    <script>
+        tinymce.init({
+            selector: '#blogBody',
+            plugins: 'image code link lists video',
+            toolbar: 'undo redo | styles | bold italic | alignleft aligncenter alignright | bullist numlist | link image | code',
+            height: 400,
+            images_upload_url: '/upload',
+            images_upload_handler: function (blobInfo, success, failure) {
+                const formData = new FormData();
+                formData.append('file', blobInfo.blob(), blobInfo.filename());
+
+                fetch('/upload', {
+                    method: 'POST',
+                    body: formData,
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.location) {
+                        success(data.location);
+                    } else {
+                        failure('Upload failed');
+                    }
+                })
+                .catch(() => failure('Upload failed'));
+            },
+        });
+    </script>
+</head>
+<body>
+    <%- include('./partials/nav') %>
+    <div class="container mt-4">
+        <h2>Edit Blog</h2>
+        <form action="/update-blog/<%= blog._id %>" method="post" enctype="multipart/form-data">
+            <div class="mb-3">
+                <label for="title" class="form-label">Blog Title</label>
+                <input type="text" class="form-control" id="title" name="title" value="<%= blog.title %>" required>
+            </div>
+            <div class="mb-3">
+                <label for="category" class="form-label">Category</label>
+                <select class="form-select" id="category" name="category" required>
+                    <option value="Technology" <%= blog.category === 'Technology' ? 'selected' : '' %>>Technology</option>
+                    <option value="Travel" <%= blog.category === 'Travel' ? 'selected' : '' %>>Travel</option>
+                    <option value="Food" <%= blog.category === 'Food' ? 'selected' : '' %>>Food</option>
+                    <option value="Lifestyle" <%= blog.category === 'Lifestyle' ? 'selected' : '' %>>Lifestyle</option>
+                    <option value="Fashion" <%= blog.category === 'Fashion' ? 'selected' : '' %>>Fashion</option>
+                    <option value="Other" <%= blog.category === 'Other' ? 'selected' : '' %>>Other</option>
+                </select>
+            </div>
+            <div class="mb-3">
+                <label for="coverImage" class="form-label">Cover Image</label>
+                <input type="file" class="form-control" id="coverImage" name="coverImage">
+                <% if (blog.coverImage) { %>
+                    <img src="<%= blog.coverImage %>" alt="Cover Image" class="img-thumbnail mt-2" style="max-width: 200px;">
+                <% } %>
+            </div>
+            <div class="mb-3">
+                <label for="blogBody" class="form-label">Blog Content</label>
+                <textarea id="blogBody" name="body" class="form-control"><%= blog.body %></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">Update Blog</button>
+        </form>
+    </div>
+    <%- include('./partials/scripts') %>
+</body>
+</html>

@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('./partials/head') %>
+    <title><%= user.fullName %>'s Profile</title>
+    <style>
+        /* Light Mode (Default) */
+        :root {
+            --background-color: #ffffff;
+            --text-color: #000000;
+            --button-bg: #f0f0f0;
+            --button-text: #333333;
+            --card-bg: #f9f9f9;
+            --card-text: #333333;
+        }
+
+        /* Dark Mode */
+        [data-theme="dark"] {
+            --background-color: #121212;
+            --text-color: #ffffff;
+            --button-bg: #333333;
+            --button-text: #f0f0f0;
+            --card-bg: #1e1e1e;
+            --card-text: #ffffff;
+        }
+
+        body {
+            background-color: var(--background-color);
+            color: var(--text-color);
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        button {
+            background-color: var(--button-bg);
+            color: var(--button-text);
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+        }
+
+        .profile-card, .blog-card, .comment-card {
+            background-color: var(--card-bg);
+            color: var(--card-text);
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .profile-card img, .blog-card img {
+            max-width: 100%;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body data-theme="light">
+    <%- include('./partials/nav') %>
+    <div class="container profile-container">
+        <!-- Theme Toggle Button -->
+        <button id="theme-toggle" class="mb-4">Switch to Dark Mode</button>
+
+        <div class="row">
+            <!-- User Info -->
+            <div class="col-md-4">
+                <div class="profile-card">
+                    <img src="/images/default.png" alt="Profile Image">
+                    <h5><%= user.fullName %></h5>
+                    <p><strong>Email:</strong> <%= user.email %></p>
+                    <p><strong>Role:</strong> <%= user.role %></p>
+                </div>
+            </div>
+
+            <!-- User Blogs -->
+            <div class="col-md-8">
+                <h3>My Blogs</h3>
+                <% if (blogs.length > 0) { %>
+                    <% blogs.forEach(blog => { %>
+                        <div class="blog-card">
+                            <img src="<%= blog.coverImageURL %>" alt="<%= blog.title %>">
+                            <div class="card-body">
+                                <h5 class="card-title"><%= blog.title %></h5>
+                                <p class="card-text"><%= blog.body.substring(0, 100) %>...</p>
+                                <a href="/blog/<%= blog._id %>" class="btn btn-primary">Read More</a>
+                                <form action="/blog/<%= blog._id %>?_method=DELETE" method="POST" class="d-inline">
+                                    <button type="submit" class="btn btn-danger">Delete</button>
+                                </form>
+                                <a href="/edit-blog/<%= blog._id %>" class="btn btn-primary">Edit</a>
+                            </div>
+                        </div>
+                    <% }) %>
+                <% } else { %>
+                    <p>You haven't written any blogs yet.</p>
+                <% } %>
+            </div>
+        </div>
+
+        <!-- User Comments -->
+        <div class="row mt-4">
+            <div class="col-md-12">
+                <h3>My Comments</h3>
+                <% if (comments.length > 0) { %>
+                    <% comments.forEach(comment => { %>
+                        <div class="comment-card">
+                            <p><%= comment.content %></p>
+                            <% if (comment.blogId) { %>
+                                <small>On: <a href="/blog/<%= comment.blogId._id %>"><%= comment.blogId.title %></a></small>
+                            <% } else { %>
+                                <small>On: <span class="text-muted">Deleted Blog</span></small>
+                            <% } %>
+                            <form action="/comment/<%= comment._id %>?_method=DELETE" method="POST" class="d-inline">
+                                <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                            </form>
+                        </div>
+                    <% }) %>
+                <% } else { %>
+                    <p>You haven't written any comments yet.</p>
+                <% } %>
+            </div>
+        </div>
+    </div>
+    <%- include('./partials/footer') %>
+    <%- include('./partials/scripts') %>
+</body>
+</html>

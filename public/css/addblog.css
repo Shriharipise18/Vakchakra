@@ -1,0 +1,111 @@
+/* ==================== */
+/* General Styles       */
+/* ==================== */
+body {
+    font-family: 'Poppins', sans-serif;
+    background-image: url('/pc.jpg'); /* Ensure the path is correct */
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    color: #fff; /* Ensuring text is visible */
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+/* ==================== */
+/* Transparent Container Styles     */
+/* ==================== */
+.container {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 30px;
+    background: rgba(255, 255, 255, 0.05); /* Almost fully transparent */
+    border-radius: 16px;
+    backdrop-filter: blur(12px); /* Frosted glass effect */
+    -webkit-backdrop-filter: blur(12px); /* Safari support */
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease-in-out;
+    border: 2px solid rgba(255, 255, 255, 0.2); /* Very light transparent border */
+}
+
+.container:hover {
+    transform: scale(1.02);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3);
+}
+
+/* ==================== */
+/* Transparent Form Styles */
+/* ==================== */
+.form-container {
+    padding: 20px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.05); /* Even lighter background */
+    backdrop-filter: blur(8px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.form-control, .form-select {
+    width: 100%;
+    padding: 14px;
+    margin-bottom: 20px;
+    border: 2px solid rgba(255, 255, 255, 0.3); /* Light transparent border */
+    border-radius: 10px;
+    font-size: 1rem;
+    background: rgba(255, 255, 255, 0.1); /* Slightly transparent */
+    transition: all 0.3s ease-in-out;
+    color: #fff; /* White text */
+}
+
+.form-control::placeholder {
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.form-control:focus {
+    border-color: rgba(0, 123, 255, 0.5);
+    outline: none;
+    box-shadow: 0 0 12px rgba(0, 123, 255, 0.3);
+}
+
+/* ==================== */
+/* Transparent Button Styles        */
+/* ==================== */
+.btn-primary {
+    background: rgba(0, 123, 255, 0.4); /* Transparent button */
+    color: #fff;
+    padding: 14px 30px;
+    border: 2px solid rgba(255, 255, 255, 0.4);
+    border-radius: 10px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+}
+
+.btn-primary:hover {
+    background: rgba(0, 86, 179, 0.6);
+    transform: scale(1.05);
+}
+
+/* ==================== */
+/* Responsive Design    */
+/* ==================== */
+@media (max-width: 768px) {
+    .container {
+        padding: 20px;
+    }
+
+    .form-control {
+        font-size: 0.95rem;
+        padding: 12px;
+    }
+
+    .btn-primary {
+        width: 100%;
+        padding: 16px;
+    }
+}

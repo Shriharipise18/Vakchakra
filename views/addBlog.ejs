@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('./partials/head') %>
+    <title>Add New Blog</title>
+    <!-- TinyMCE Script -->
+    
+    <script src="https://cdn.tiny.cloud/1/34zhin37w93jjpzlgtn8cmwutl1pdyig1c8anvddr4qs8kvm/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+    <script>
+        tinymce.init({
+            selector: '#blogBody', // ID of the textarea to replace
+            plugins: 'image code link lists video', // Add plugins for images, links, lists, etc.
+            toolbar: 'undo redo | styles | bold italic | alignleft aligncenter alignright | bullist numlist | link image | code', // Customize toolbar
+            height: 400, // Set editor height
+            images_upload_url: '/upload', // Endpoint for image uploads (see Step 3)
+            images_upload_handler: function (blobInfo, success, failure) {
+                // Handle image uploads (see Step 3)
+                const formData = new FormData();
+                formData.append('file', blobInfo.blob(), blobInfo.filename());
+
+                fetch('/upload', {
+                    method: 'POST',
+                    body: formData,
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.location) {
+                        success(data.location); // Return the image URL
+                    } else {
+                        failure('Upload failed');
+                    }
+                })
+                .catch(() => failure('Upload failed'));
+            },
+        });
+    </script>
+</head>
+<body>
+    <%- include('./partials/nav') %>
+    <div class="container mt-4">
+        <h2>Add New Blog</h2>
+        <form action="/blog" method="post" enctype="multipart/form-data">
+            <div class="mb-3">
+                <label for="title" class="form-label">Blog Title</label>
+                <input type="text" class="form-control" id="title" name="title" required>
+            </div>
+            <div class="mb-3">
+                <label for="category" class="form-label">Category</label>
+                <select class="form-select" id="category" name="category" required>
+                    <option value="Technology">Technology</option>
+                    <option value="Travel">Travel</option>
+                    <option value="Food">Food</option>
+                    <option value="Lifestyle">Lifestyle</option>
+                    <option value="Fashion">Fashion</option>
+                    <option value="Other">Other</option>
+                </select>
+            </div>
+            <div class="mb-3">
+                <label for="coverImage" class="form-label">Cover Image</label>
+                <input type="file" class="form-control" id="coverImage" name="coverImage">
+            </div>
+            <div class="mb-3">
+                <label for="blogBody" class="form-label">Blog Content</label>
+                <!-- Replace textarea with TinyMCE editor -->
+                <textarea id="blogBody" name="body" class="form-control"></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+    </div>
+    <%- include('./partials/footer') %>
+    <%- include('./partials/scripts') %>
+
+</body>
+</html>
